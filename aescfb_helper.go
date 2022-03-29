@@ -12,15 +12,15 @@ import (
 	"strings"
 )
 
-// aes256 encrypt to base64 helper
-type AesHelper struct {
+// aes256(CFB) encrypt to base64 helper
+type AesCFBHelper struct {
 	SecretKey string
 }
 
 /**
 *	SetSecret
 **/
-func (a *AesHelper) SetSecret(key string) {
+func (a *AesCFBHelper) SetSecret(key string) {
 	if len(key) < 32 {
 		panic("invalid secret key length.")
 	}
@@ -30,7 +30,7 @@ func (a *AesHelper) SetSecret(key string) {
 /**
 *	addB64Padding
 **/
-func (a *AesHelper) addB64Padding(value string) string {
+func (a *AesCFBHelper) addB64Padding(value string) string {
 	m := len(value) % 4
 	if m != 0 {
 		value += strings.Repeat("=", 4-m)
@@ -41,14 +41,14 @@ func (a *AesHelper) addB64Padding(value string) string {
 /**
 *	removeB64Padding
 **/
-func (a *AesHelper) removeB64Padding(value string) string {
+func (a *AesCFBHelper) removeB64Padding(value string) string {
 	return strings.Replace(value, "=", "", -1)
 }
 
 /**
 *	encryptPadding
 **/
-func (a *AesHelper) encryptPadding(src []byte) []byte {
+func (a *AesCFBHelper) encryptPadding(src []byte) []byte {
 	padding := aes.BlockSize - len(src)%aes.BlockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(src, padtext...)
@@ -57,7 +57,7 @@ func (a *AesHelper) encryptPadding(src []byte) []byte {
 /**
 *	encryptUnPadding
 **/
-func (a *AesHelper) encryptUnPadding(src []byte) ([]byte, error) {
+func (a *AesCFBHelper) encryptUnPadding(src []byte) ([]byte, error) {
 	length := len(src)
 	unpadding := int(src[length-1])
 
@@ -71,7 +71,7 @@ func (a *AesHelper) encryptUnPadding(src []byte) ([]byte, error) {
 /**
 *	encryptB64
 **/
-func (a *AesHelper) encryptB64(key []byte, text string) (string, error) {
+func (a *AesCFBHelper) encryptB64(key []byte, text string) (string, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return "", err
@@ -93,7 +93,7 @@ func (a *AesHelper) encryptB64(key []byte, text string) (string, error) {
 /**
 *	decryptB64
 **/
-func (a *AesHelper) decryptB64(key []byte, text string) (string, error) {
+func (a *AesCFBHelper) decryptB64(key []byte, text string) (string, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return "", err
@@ -125,7 +125,7 @@ func (a *AesHelper) decryptB64(key []byte, text string) (string, error) {
 /**
 *	EncryptToBase64
 **/
-func (a *AesHelper) EncryptToBase64(plainText string) (string, error) {
+func (a *AesCFBHelper) EncryptToBase64(plainText string) (string, error) {
 	if a.SecretKey == "" {
 		return "", errors.New("SecretKey is empty")
 	}
@@ -140,7 +140,7 @@ func (a *AesHelper) EncryptToBase64(plainText string) (string, error) {
 /**
 *	DecryptFromBase64
 **/
-func (a *AesHelper) DecryptFromBase64(encText string) (string, error) {
+func (a *AesCFBHelper) DecryptFromBase64(encText string) (string, error) {
 	if a.SecretKey == "" {
 		return "", errors.New("SecretKey is empty")
 	}
@@ -163,7 +163,7 @@ func (a *AesHelper) DecryptFromBase64(encText string) (string, error) {
 /**
 *	EncryptToHex
 **/
-func (a *AesHelper) EncryptToHex(text string) (string, error) {
+func (a *AesCFBHelper) EncryptToHex(text string) (string, error) {
 	if a.SecretKey == "" {
 		return "", errors.New("SecretKey is empty")
 	}
@@ -189,7 +189,7 @@ func (a *AesHelper) EncryptToHex(text string) (string, error) {
 /**
 *	DecryptFromHex
 **/
-func (a *AesHelper) DecryptFromHex(hexStr string) (string, error) {
+func (a *AesCFBHelper) DecryptFromHex(hexStr string) (string, error) {
 	if a.SecretKey == "" {
 		return "", errors.New("SecretKey is empty")
 	}

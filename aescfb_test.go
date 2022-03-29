@@ -7,7 +7,7 @@ import (
 )
 
 func TestAes1(t *testing.T) {
-	ah := AesHelper{}
+	ah := AesCFBHelper{}
 
 	ah.SetSecret("akjsdhiuqwe1i23eyjkwdhf92yehf98213yrkjdshfdkufy2io3frkjsdhfkjsdhfk2h34")
 
@@ -24,7 +24,7 @@ func TestAes1(t *testing.T) {
 }
 
 func TestAes2(t *testing.T) {
-	ah := AesHelper{}
+	ah := AesCFBHelper{}
 
 	ah.SetSecret("weiru2039rulksdjf892yrfidjf82409yfjwhg9724tgjukhslkdfyho8dyf2o34jhf")
 
@@ -42,7 +42,7 @@ func TestAes2(t *testing.T) {
 }
 
 func TestAes3(t *testing.T) {
-	ah := AesHelper{}
+	ah := AesCFBHelper{}
 
 	ah.SetSecret("wer20389rlkshdfi8ofh2ojflkdsjfldisufwezdfsdfwe")
 
